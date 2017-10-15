@@ -19,4 +19,5 @@ Discord to Pterodactyl/Ingame interface for UnraveledMC
 		"ip": "",
 		"port": 25565
 	}
-}```
+}
+```
