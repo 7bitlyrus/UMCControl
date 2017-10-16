@@ -8,9 +8,7 @@ var config = require("./config.json");
 
 var commands = {
 	"state":  {
-		"func": (msg) => {
-			query(msg, () => msg.reply("The server appears to be online."));
-		}
+		"func": (msg) => query(msg, () => msg.reply("The server appears to be online."));
 	},
 	"list":  {
 		"func": (msg) => {
