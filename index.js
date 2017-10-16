@@ -9,31 +9,15 @@ var config = require("./config.json");
 var commands = {
 	"state":  {
 		"func": (msg) => {
-			Gamedig.query({
-				type: 'minecraftping',
-				host: config.server.ip,
-				port: config.server.port || 25565
-			}).then((r) => {
-				msg.reply("The server appears to be online.")
-			}).catch((e) => {
-				msg.reply("The server appears to be offline.")
-			});
+			query(msg, () => msg.reply("The server appears to be online."));
 		}
 	},
 	"list":  {
 		"func": (msg) => {
-			Gamedig.query({
-				type: 'minecraftping',
-				host: config.server.ip,
-				port: config.server.port || 25565
-			}).then((r) => {
+			query(msg, (r) => {
 				plys = []
-				r.players.forEach((ply) => {
-					plys.push(ply.name);
-				});
+				r.players.forEach((ply) => plys.push(ply.name));
 				msg.reply(`The following users are on the server:\n\`\`\`${plys.join(", ")}\`\`\``);
-			}).catch((e) => {
-				msg.reply("The server appears to be offline.");
 			});
 		}
 	},
@@ -56,30 +40,8 @@ var commands = {
 	"sendcommand": {
 		"privileged": true,
 		"func": (msg, args) => {
-			var url  = `${config.panel.endpoint}/user/server/${config.server.uuid}/command`
-			var cmd  = args.join(" ")
-			var body = {"command": cmd}
-
-			hmac = crypto.createHmac("sha256", config.panel.private);
-			hmac.update(`${url}${JSON.stringify(body)}`);
-
-			var opts = {
-				method: 'POST',
-				uri: url,
-				headers: {
-					'Authorization': `Bearer ${config.panel.public}.${hmac.digest("base64")}`
-				},
-				body: body,
-				json: true
-			};
-
-			rpn(opts)
-			.then(() => {
-				msg.reply(":ok_hand:")
-			}).catch((e) => {
-				console.warn(e)
-				msg.reply(":warning: An error occurred. The server may be offline or refusing our request.");
-			})
+			callServerAPI("command", {"command": args.join(" ")}, msg, ":warning: An error occurred. The server may " +
+				"be offline or refusing our request.")
 		}
 	}
 }
@@ -95,7 +57,7 @@ client.on('message', (msg) => {
 
 	isPleb = msg.member.roles.get(config.discord.privRole) ? false : true
 	if(commands[cmd].privileged && isPleb) {
-		msg.reply(":x: Access denied. ")
+		msg.reply(":x: Access denied.")
 		return;
 	}
 
@@ -110,8 +72,12 @@ client.on('disconnect', console.warn);
 client.login(config.discord.token);
 
 function power(action, msg) {
-	var url = `${config.panel.endpoint}/user/server/${config.server.uuid}/power`
-	var body = {"action": action}
+	callServerAPI("power", {"action": action}, msg, ":warning: An error occurred. The server may be in the process of " + 
+		"completing another power action or already be in that state.")
+}
+
+function callServerAPI(endpoint, body, msg, errmsg) {
+	var url = `${config.panel.endpoint}/user/server/${config.server.uuid}/${endpoint}`
 
 	hmac = crypto.createHmac("sha256", config.panel.private);
 	hmac.update(`${url}${JSON.stringify(body)}`);
@@ -126,10 +92,13 @@ function power(action, msg) {
 		json: true
 	};
 
-	rpn(opts)
-	.then(() => {
-		msg.reply(":ok_hand:")
-	}).catch(() => msg.reply(":warning: An error occurred. The server may be in the process of completing another " +
-		"power action or already be in that state.")
-	)
+	rpn(opts).then(() => msg.reply(":ok_hand:")).catch(() => msg.reply(errmsg))
+} 
+
+function query(msg, cb) {
+	Gamedig.query({
+		type: 'minecraftping',
+		host: config.server.ip,
+		port: config.server.port || 25565
+	}).then(cb).catch(() => msg.reply("The server appears to be offline."));
 }
