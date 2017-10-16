@@ -17,26 +17,14 @@ var commands = {
 			query(msg, (r) => {
 				plys = []
 				r.players.forEach((ply) => plys.push(ply.name));
-				msg.reply(`The following users are on the server:\n\`\`\`${plys.join(", ")}\`\`\``);
+				msg.reply(`The following users are on the server:\n\`\`\`${plys.join(", ")} \`\`\``);
 			});
 		}
 	},
-	"start": {
-		"privileged": true,
-		"func": (msg) => power("start", msg)
-	},
-	"stop": {
-		"privileged": true,
-		"func": (msg) => power("stop", msg)
-	},
-	"restart": {
-		"privileged": true,
-		"func": (msg) => power("restart", msg)
-	},
-	"kill": {
-		"privileged": true,
-		"func": (msg) => power("kill", msg)
-	},
+	"start": powerCmd("start"),
+	"stop": powerCmd("stop"),
+	"restart": powerCmd("restart"),
+	"kill": powerCmd("kill"),
 	"sendcommand": {
 		"privileged": true,
 		"func": (msg, args) => {
@@ -71,9 +59,12 @@ client.on('disconnect', console.warn);
 
 client.login(config.discord.token);
 
-function power(action, msg) {
-	callServerAPI("power", {"action": action}, msg, ":warning: An error occurred. The server may be in the process of " + 
-		"completing another power action or already be in that state.")
+function powerCmd(action) {
+	return {
+		"privileged": true,
+		"func": (msg) => callServerAPI("power", {"action": action}, msg, ":warning: An error occurred. The server " + 
+			"may be in the process of completing another power action or already be in that state.")
+	}
 }
 
 function callServerAPI(endpoint, body, msg, errmsg) {
