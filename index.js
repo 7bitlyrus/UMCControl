@@ -8,14 +8,18 @@ var config = require("./config.json");
 
 var commands = {
 	"state":  {
-		"func": (msg) => query(msg, () => msg.reply("The server appears to be online."));
+		"func": (msg) => query(msg, () => msg.reply(":white_check_mark: The server appears to be online."))
 	},
 	"list":  {
 		"func": (msg) => {
 			query(msg, (r) => {
 				plys = []
 				r.players.forEach((ply) => plys.push(ply.name));
-				msg.reply(`The following users are on the server:\n\`\`\`${plys.join(", ")} \`\`\``);
+				if(plys.length) {
+					msg.reply(`:scroll: The following users are on the server:\n\`\`\`${plys.join(", ")}\`\`\``);
+				} else {
+					msg.reply(":no_pedestrians: No users are on the server.")
+				}
 			});
 		}
 	},
@@ -43,7 +47,7 @@ client.on('message', (msg) => {
 
 	isPleb = msg.member.roles.get(config.discord.privRole) ? false : true
 	if(commands[cmd].privileged && isPleb) {
-		msg.reply(":x: Access denied.")
+		msg.reply(":no_entry_sign: You do not have the role required to run this command.")
 		return;
 	}
 
@@ -89,5 +93,5 @@ function query(msg, cb) {
 		type: 'minecraftping',
 		host: config.server.ip,
 		port: config.server.port || 25565
-	}).then(cb).catch(() => msg.reply("The server appears to be offline."));
+	}).then(cb).catch(() => msg.reply(":x: The server appears to be offline."));
 }
