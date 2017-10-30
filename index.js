@@ -9,7 +9,7 @@ let strings = { // You should edit your config to change strings instead of here
 	"server_online":  ":white_check_mark: The server appears to be online.",
 	"server_offline": ":white_check_mark: The server appears to be offline.",
 	"list_user_list": ":scroll: The following users are online:\n```$list$```",
-	"list_no_users":  ":no_pedestrians: No users are on the server.",
+	"list_no_users":  ":busts_in_silhouette: No users are on the server.",
 	"error_command":  ":warning: An error occurred. The server may be offline or refusing our request.",
 	"no_permisson":   ":no_entry_sign: You do not have the role required to run this command.",
 	"error_power":    ":warning: An error occurred. The server may be busy entering a state or already in that state.",
@@ -41,6 +41,7 @@ const commands = {
 }
 
 client.on('message', msg => {
+	if(msg.author.bot) return
 	if(msg.author.id == client.user.id) return
 	if(!msg.content.startsWith(config.discord.prefix)) return
 
