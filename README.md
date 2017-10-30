@@ -1,23 +1,12 @@
 # UMCControl
-Discord to Pterodactyl/Ingame interface for UnraveledMC 
+Interface for controlling Pterodactyl and your minecraft server from Discord.
 
-## `config.json` template
-```js
- {
-	"discord": {
-		"token": "",
-		"prefix": "",
-		"privRole": "123456789012345678"
-	},
-	"panel": {
-		"endpoint": "", 
-		"public": "",
-		"private": ""
-	},
-	"server": {
-		"uuid": "",
-		"ip": "",
-		"port": 25565
-	}
-}
+## Quick Setup Guide
+```sh
+$ git clone https://github.com/IanMurray/UMCControl.git
+$ cd UMCControl
+$ npm install
+$ cp example_config.json config.json
+$ # Edit config.json to your liking
+$ node index.js
 ```

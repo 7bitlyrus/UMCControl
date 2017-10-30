@@ -1,0 +1,20 @@
+ {
+	"discord": {
+		"token": "",
+		"prefix": "",
+		"privRole": "123456789012345678"
+	},
+	"panel": {
+		"endpoint": "", 
+		"public": "",
+		"private": ""
+	},
+	"server": {
+		"uuid": "",
+		"ip": "",
+		"port": 25565
+	},
+	"strings": {
+		"_comment": "Optional. Allows redefining of default strings, see index.js for list of strings."
+	}
+}
