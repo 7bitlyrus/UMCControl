@@ -7,10 +7,10 @@ const Gamedig   = require('gamedig');
 let config = require("./config.json");
 
 let commands = {
-	"state":  {
+	state: {
 		"func": (msg) => query(msg, () => msg.reply(":white_check_mark: The server appears to be online."))
 	},
-	"list":  {
+	list: {
 		"func": (msg) => {
 			query(msg, (r) => {
 				const plys = r.players.map(ply => ply.name);
@@ -19,13 +19,13 @@ let commands = {
 			});
 		}
 	},
-	"start": powerCmd("start"),
-	"stop": powerCmd("stop"),
-	"restart": powerCmd("restart"),
-	"kill": powerCmd("kill"),
-	"sendcommand": {
-		"privileged": true,
-		"func": (msg, args) => {
+	start: powerCmd("start"),
+	stop: powerCmd("stop"),
+	restart: powerCmd("restart"),
+	kill: powerCmd("kill"),
+	sendcommand: {
+		privileged: true,
+		func: (msg, args) => {
 			callServerAPI("command", {"command": args.join(" ")}, msg, ":warning: An error occurred. The server may " +
 				"be offline or refusing our request.")
 		}
@@ -41,8 +41,7 @@ client.on('message', (msg) => {
 
 	if(!commands[cmd]) return;
 
-	isPleb = msg.member.roles.get(config.discord.privRole) ? false : true
-	if(commands[cmd].privileged && isPleb) {
+	if(commands[cmd].privileged && !msg.member.roles.get(config.discord.privRole)) {
 		msg.reply(":no_entry_sign: You do not have the role required to run this command.")
 		return;
 	}
@@ -59,8 +58,8 @@ client.login(config.discord.token);
 
 function powerCmd(action) {
 	return {
-		"privileged": true,
-		"func": (msg) => callServerAPI("power", {"action": action}, msg, ":warning: An error occurred. The server " + 
+		privileged: true,
+		func: (msg) => callServerAPI("power", {"action": action}, msg, ":warning: An error occurred. The server " + 
 			"may be in the process of completing another power action or already be in that state.")
 	}
 }
