@@ -48,10 +48,8 @@ client.on('message', msg => {
 	const cmd = args.shift().slice(config.discord.prefix.length)
 
 	if(!commands[cmd]) return
-	if(commands[cmd].privileged && !msg.member.roles.get(config.discord.privRole)) {
-		msg.reply(strings.no_permisson)
-		return
-	}
+	if(commands[cmd].privileged && !msg.member.roles.get(config.discord.privRole))
+		return msg.reply(strings.no_permisson)
 
 	commands[cmd].func(msg, args)
 })
