@@ -4,22 +4,18 @@ const rpn       = require('request-promise-native');
 const crypto    = require('crypto');
 const Gamedig   = require('gamedig');
 
-var config = require("./config.json");
+let config = require("./config.json");
 
-var commands = {
+let commands = {
 	"state":  {
 		"func": (msg) => query(msg, () => msg.reply(":white_check_mark: The server appears to be online."))
 	},
 	"list":  {
 		"func": (msg) => {
 			query(msg, (r) => {
-				plys = []
-				r.players.forEach((ply) => plys.push(ply.name));
-				if(plys.length) {
-					msg.reply(`:scroll: The following users are on the server:\n\`\`\`${plys.join(", ")}\`\`\``);
-				} else {
-					msg.reply(":no_pedestrians: No users are on the server.")
-				}
+				const plys = r.players.map(ply => ply.name);
+				if(plys.length) msg.reply(`:scroll: The following users are online:\n\`\`\`${plys.join(", ")}\`\`\``);
+				else msg.reply(":no_pedestrians: No users are on the server.")
 			});
 		}
 	},
@@ -70,12 +66,12 @@ function powerCmd(action) {
 }
 
 function callServerAPI(endpoint, body, msg, errmsg) {
-	var url = `${config.panel.endpoint}/user/server/${config.server.uuid}/${endpoint}`
+	let url = `${config.panel.endpoint}/user/server/${config.server.uuid}/${endpoint}`
 
 	hmac = crypto.createHmac("sha256", config.panel.private);
 	hmac.update(`${url}${JSON.stringify(body)}`);
 
-	var opts = {
+	let opts = {
 		method: 'POST',
 		uri: url,
 		headers: {
