@@ -3,7 +3,7 @@ const client    = new discord.Client()
 const rpn       = require('request-promise-native')
 const crypto    = require('crypto')
 const Gamedig   = require('gamedig')
-const config    = require("./config.json")
+const config    = require('./config.json')
 
 let strings = { // You should edit your config to change strings instead of here!
 	"server_online":  ":white_check_mark: The server appears to be online.",
