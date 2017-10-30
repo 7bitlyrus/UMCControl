@@ -36,9 +36,7 @@ const commands = {
 	kill: powerCmd("kill"),
 	sendcommand: {
 		privileged: true,
-		func: (msg, args) => {
-			callServerAPI("command", {"command": args.join(" ")}, msg, strings.error_command)
-		}
+		func: (msg, args) => callServerAPI("command", {"command": args.join(" ")}, msg, strings.error_command)
 	}
 }
 
