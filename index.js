@@ -19,11 +19,11 @@ strings = Object.assign(strings, config.strings)
 
 const commands = {
 	state: {
-		"func": (msg) => query(msg, () => msg.reply(strings.server_online))
+		"func": msg => query(msg, () => msg.reply(strings.server_online))
 	},
 	list: {
-		"func": (msg) => {
-			query(msg, (r) => {
+		"func": msg => {
+			query(msg, r => {
 				const plys = r.players.map(ply => ply.name)
 				if(plys.length) msg.reply(strings.list_user_list.replace("$list$", plys.join(", ")))
 				else msg.reply(strings.list_no_users)
@@ -42,7 +42,7 @@ const commands = {
 	}
 }
 
-client.on('message', (msg) => {
+client.on('message', msg => {
 	if(msg.author.id == client.user.id) return
 	if(!msg.content.startsWith(config.discord.prefix)) return
 
@@ -68,7 +68,7 @@ client.login(config.discord.token)
 function powerCmd(action) {
 	return {
 		privileged: true,
-		func: (msg) => callServerAPI("power", {"action": action}, msg, strings.error_power)
+		func: msg => callServerAPI("power", {"action": action}, msg, strings.error_power)
 	}
 }
 
