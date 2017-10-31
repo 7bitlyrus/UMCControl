@@ -9,7 +9,7 @@
   "author": "Ian Murray <ian@murr.pro>",
   "license": "MIT",
   "dependencies": {
-    "discord.js": "^11.2.1",
+    "discord.js": "hydrabolt/discord.js",
     "gamedig": "^1.0.37",
     "request": "^2.83.0",
     "request-promise-native": "^1.0.5"
