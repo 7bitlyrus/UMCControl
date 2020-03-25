@@ -1,3 +1,8 @@
+**This repository has been archived.** It is no longer maintained and may no longer function with external services. If you're still interested  in this repository, [check for forks from other users](../../network) or [start your own](../../fork).
+
+Also check out my [Discodactyl](https://github.com/7bitlyrus/Discodactyl) repository, which also provides a Minecraft & Pterodactyl to Discord interface.
+___
+
 # UMCControl
 Interface for controlling Pterodactyl and your minecraft server from Discord.
 
